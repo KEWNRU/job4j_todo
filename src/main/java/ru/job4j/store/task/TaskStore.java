@@ -1,4 +1,4 @@
-package ru.job4j.store;
+package ru.job4j.store.task;
 
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
@@ -6,9 +6,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Task;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -32,37 +32,42 @@ public class TaskStore implements HqlTaskStore {
     }
 
     @Override
-    public void update(Task task) {
+    public boolean update(Task task) {
         Session session = sf.openSession();
+        boolean rsl = false;
         try {
             session.beginTransaction();
-            session.createQuery("update Task set done =: done, description =: description where id =:id")
-                    .setParameter("done", task.isDone())
-                    .setParameter("description", task.getDescription())
+            session.createQuery("update from Task set title =: title where id =:id")
+                    .setParameter("title", task.getTitle())
                     .setParameter("id", task.getId())
                     .executeUpdate();
+            rsl = true;
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return rsl;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Session session = sf.openSession();
+        boolean rsl = false;
         try {
             session.beginTransaction();
             session.createQuery("delete from Task where id = :id")
                     .setParameter("id", id)
                     .executeUpdate();
+            rsl = true;
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return rsl;
     }
 
     @Override
@@ -82,14 +87,14 @@ public class TaskStore implements HqlTaskStore {
     }
 
     @Override
-    public Task findById(Integer id) {
+    public Optional<Task> findById(Integer id) {
         Session session = sf.openSession();
-        Task task = null;
+        Optional<Task> task = null;
         try {
             session.beginTransaction();
             task = session.createQuery("from Task where id = :id", Task.class)
                     .setParameter("id", id)
-                    .uniqueResult();
+                    .uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -114,5 +119,34 @@ public class TaskStore implements HqlTaskStore {
             session.close();
         }
         return list;
+    }
+
+    @Override
+    public List<Task> buttonCompleteTask(int id, Task task) {
+        List<Task> tasks = new ArrayList<>();
+        findById(id);
+        task.setDone(true);
+        tasks.add(task);
+        updateTask(task.getId(), task.isDone());
+        return tasks;
+    }
+
+    @Override
+    public boolean updateTask(int id, boolean done) {
+        Session session = sf.openSession();
+        boolean rsl = false;
+        try {
+            session.beginTransaction();
+            session.createQuery("update from Task set done =: done where id =:id")
+                    .setParameter("done", done)
+                    .setParameter("id", id)
+                    .executeUpdate();
+            rsl = true;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return rsl;
     }
 }
