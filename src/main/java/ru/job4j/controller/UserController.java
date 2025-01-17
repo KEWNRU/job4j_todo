@@ -12,10 +12,11 @@ import ru.job4j.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
+/**
 @ThreadSafe
-//@Controller
+@Controller
 @RequestMapping("/users")
+*/
 public class UserController {
     private final UserService userService;
 
