@@ -12,11 +12,11 @@ import ru.job4j.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-/**
+
 @ThreadSafe
 @Controller
 @RequestMapping("/users")
-*/
+
 public class UserController {
     private final UserService userService;
 
@@ -28,10 +28,10 @@ public class UserController {
     public String register(Model model, @ModelAttribute User user) {
         var savedUser = userService.save(user);
         if (savedUser.isEmpty()) {
-            model.addAttribute("message", "Пользователь с такой почтой уже существует");
+            model.addAttribute("message", "Пользователь с таким логином уже существует");
             return "/users/register";
         }
-        return "redirect:/session";
+        return "redirect:/";
     }
 
     @GetMapping("/register")
@@ -49,7 +49,7 @@ public class UserController {
     public String loginUser(@ModelAttribute User user, Model model, HttpServletRequest request) {
         var userOptional = userService.findByLogin(user.getLogin());
         if (userOptional.isEmpty()) {
-            model.addAttribute("error", "Почта или пароль введены неверно");
+            model.addAttribute("error", "Логин или пароль введены неверно");
             return "users/login";
         }
         var session = request.getSession();

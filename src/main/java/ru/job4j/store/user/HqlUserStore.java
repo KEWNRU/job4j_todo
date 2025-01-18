@@ -17,18 +17,17 @@ public class HqlUserStore implements UserStore {
     @Override
     public Optional<User> save(User user) {
         Session session = sf.openSession();
-        Optional<User> userOptional = null;
         try {
             session.beginTransaction();
-            userOptional = session.createQuery("INSERT INTO User (login, password, name) VALUES (:login, :password, :name)")
-                    .uniqueResultOptional();
+            session.save(user);
             session.getTransaction().commit();
+            return Optional.of(user);
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return userOptional;
+        return Optional.empty();
     }
 
     @Override
