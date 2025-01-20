@@ -122,31 +122,20 @@ public class TaskStore implements HqlTaskStore {
     }
 
     @Override
-    public List<Task> buttonCompleteTask(int id, Task task) {
-        List<Task> tasks = new ArrayList<>();
-        findById(id);
-        task.setDone(true);
-        tasks.add(task);
-        updateTask(task.getId(), task.isDone());
-        return tasks;
-    }
-
-    @Override
     public boolean updateTask(int id, boolean done) {
         Session session = sf.openSession();
-        boolean rsl = false;
+        int rsl = 0;
         try {
             session.beginTransaction();
-            session.createQuery("update from Task set done =: done where id =:id")
+            rsl = session.createQuery("update from Task set done =: done where id =:id")
                     .setParameter("done", done)
                     .setParameter("id", id)
                     .executeUpdate();
-            rsl = true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return rsl;
+        return rsl > 0;
     }
 }

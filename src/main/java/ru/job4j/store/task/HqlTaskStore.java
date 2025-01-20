@@ -18,7 +18,5 @@ public interface HqlTaskStore {
 
     List<Task> findDone(boolean done);
 
-    List<Task> buttonCompleteTask(int id, Task task);
-
     boolean updateTask(int id, boolean done);
 }

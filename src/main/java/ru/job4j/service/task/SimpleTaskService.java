@@ -46,10 +46,6 @@ public class SimpleTaskService implements TaskService {
         return hqlTaskStore.findDone(done);
     }
 
-    @Override
-    public List<Task> buttonCompleteTask(int id, Task task) {
-        return hqlTaskStore.buttonCompleteTask(id, task);
-    }
 
     @Override
     public boolean updateTask(int id, boolean done) {

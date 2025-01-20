@@ -55,7 +55,14 @@ public class TaskController {
 
     @GetMapping("/buttonCompleteTask/{id}")
     public String buttonCompleteTask(Model model, @ModelAttribute Task task) {
-        model.addAttribute("task", taskService.buttonCompleteTask(task.getId(), task));
+        var button = taskService.updateTask(task.getId(), task.isDone());
+        if (!button) {
+            model.addAttribute("message", "Что-то пошло не так");
+            return "error/404";
+        } else {
+            task.setDone(true);
+            taskService.updateTask(task.getId(), task.isDone());
+        }
         return "redirect:/task/list";
     }
 
