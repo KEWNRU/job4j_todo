@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Task;
+import ru.job4j.model.User;
 import ru.job4j.service.task.TaskService;
 
 @Controller
@@ -14,7 +15,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/list")
-    public String getTaskAll(Model model) {
+    public String getTaskAll(Model model, @SessionAttribute User user) {
         model.addAttribute("task", taskService.findAll());
         return "task/list";
     }
@@ -48,15 +49,15 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task) {
+    public String createTask(@ModelAttribute Task task, @SessionAttribute User user) {
+        task.setUser(user);
         taskService.add(task);
         return "redirect:/task/list";
     }
 
     @GetMapping("/buttonCompleteTask/{id}")
     public String buttonCompleteTask(Model model, @ModelAttribute Task task) {
-        var button = taskService.updateTask(task.getId(), task.isDone());
-        if (!button) {
+        if (!taskService.updateTask(task.getId(), task.isDone())) {
             model.addAttribute("message", "Что-то пошло не так");
             return "error/404";
         } else {
