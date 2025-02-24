@@ -37,7 +37,7 @@ public class TaskStore implements HqlTaskStore {
 
     @Override
     public List<Task> findAll() {
-        return crudRepository.query("from Task order by id", Task.class);
+        return crudRepository.query("from Task f join fetch f.priority", Task.class);
     }
 
     @Override

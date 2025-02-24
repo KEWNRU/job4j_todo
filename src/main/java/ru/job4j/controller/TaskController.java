@@ -15,7 +15,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/list")
-    public String getTaskAll(Model model, @SessionAttribute User user) {
+    public String getTaskAll(Model model) {
         model.addAttribute("task", taskService.findAll());
         return "task/list";
     }
