@@ -27,6 +27,7 @@ public class TaskStore implements HqlTaskStore {
     public boolean update(Task task) {
         return crudRepository.booleanQuery("update Task title =: title where id =: id",
                 Map.of("title", task.getTitle(),
+                        "priority", task.getPriority().getId(),
                         "id", task.getId()));
     }
 

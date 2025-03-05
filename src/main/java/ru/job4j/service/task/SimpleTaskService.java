@@ -51,4 +51,5 @@ public class SimpleTaskService implements TaskService {
     public boolean updateTask(int id, boolean done) {
         return hqlTaskStore.updateTask(id, done);
     }
+
 }

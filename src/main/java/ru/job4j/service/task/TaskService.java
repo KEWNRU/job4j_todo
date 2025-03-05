@@ -19,4 +19,5 @@ public interface TaskService {
     List<Task> findDone(boolean done);
 
     boolean updateTask(int id, boolean done);
+
 }
