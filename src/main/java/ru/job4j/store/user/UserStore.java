@@ -14,4 +14,5 @@ public interface UserStore {
     void deleteUser(String login);
 
     Collection<User> findAll();
+    Optional<User> findById(int id);
 }

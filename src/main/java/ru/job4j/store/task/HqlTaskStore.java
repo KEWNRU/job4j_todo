@@ -1,12 +1,13 @@
 package ru.job4j.store.task;
 
+import ru.job4j.dto.TaskDto;
 import ru.job4j.model.Task;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface HqlTaskStore {
-    Task add(Task task);
+    Optional<Task> add(Task task);
 
     boolean update(Task task);
 

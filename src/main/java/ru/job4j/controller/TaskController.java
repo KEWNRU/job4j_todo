@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.dto.TaskDto;
+import ru.job4j.model.Priority;
 import ru.job4j.model.Task;
 import ru.job4j.model.User;
+import ru.job4j.service.priority.PriorityService;
 import ru.job4j.service.task.TaskService;
 
 @Controller
@@ -13,10 +16,12 @@ import ru.job4j.service.task.TaskService;
 @AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
     @GetMapping("/list")
     public String getTaskAll(Model model) {
         model.addAttribute("task", taskService.findAll());
+        model.addAttribute("priority", priorityService.findAll());
         return "task/list";
     }
 
@@ -28,6 +33,7 @@ public class TaskController {
             return "error/404";
         }
         model.addAttribute("task", optionalTask.get());
+        model.addAttribute("priority", priorityService.findById(id));
         return "task/one";
     }
 
@@ -45,6 +51,7 @@ public class TaskController {
     @GetMapping("/create")
     public String getCreateTaskPage(Model model) {
         model.addAttribute("task", taskService.findAll());
+        model.addAttribute("priority", priorityService.findAll());
         return "task/create";
     }
 

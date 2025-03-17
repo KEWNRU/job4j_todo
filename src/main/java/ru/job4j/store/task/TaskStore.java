@@ -1,13 +1,11 @@
 package ru.job4j.store.task;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Task;
 import ru.job4j.store.CrudRepository;
+import ru.job4j.store.priority.PriorityStore;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,18 +14,24 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TaskStore implements HqlTaskStore {
     private final CrudRepository crudRepository;
+    private final PriorityStore priorityStore;
 
     @Override
-    public Task add(Task task) {
-        crudRepository.run(session -> session.save(task));
-        return task;
+    public Optional<Task> add(Task task) {
+        try {
+            task.setPriority(priorityStore.findById(task.getPriority().getId()).get());
+            crudRepository.run(session -> session.save(task));
+            return Optional.of(task);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @Override
     public boolean update(Task task) {
         return crudRepository.booleanQuery("update Task title =: title where id =: id",
                 Map.of("title", task.getTitle(),
-                        "priority", task.getPriority().getId(),
                         "id", task.getId()));
     }
 
@@ -43,13 +47,13 @@ public class TaskStore implements HqlTaskStore {
 
     @Override
     public Optional<Task> findById(Integer id) {
-        return crudRepository.optional("from Task where id = :id", Task.class,
+        return crudRepository.optional("from Task f join fetch f.priority where f.id = :id", Task.class,
                 Map.of("id", id));
     }
 
     @Override
     public List<Task> findDone(boolean done) {
-        return crudRepository.query("from Task where done = :done order by id", Task.class,
+        return crudRepository.query("from Task f join fetch f.priority where done = :done", Task.class,
                 Map.of("done", done));
     }
 

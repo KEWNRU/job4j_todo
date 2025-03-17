@@ -41,4 +41,10 @@ public class HqlUserStore implements UserStore {
     public Collection<User> findAll() {
         return crudRepository.query("from User", User.class);
     }
+
+    @Override
+    public Optional<User> findById(int id) {
+        return crudRepository.optional("from Task where id = :id", User.class,
+                Map.of("id", id));
+    }
 }
