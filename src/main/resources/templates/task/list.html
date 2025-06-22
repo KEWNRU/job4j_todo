@@ -34,11 +34,11 @@
                 <tr th:each="tasks: ${task}">
                     <td>
                     </td>
-                    <td><a th:text="${tasks.title}" th:href="@{/task/{tasksId}(tasksId=${tasks.taskId})}"></a></td>
-                    <td th:text="${tasks.userName}"/>
+                    <td><a th:text="${tasks.title}" th:href="@{/task/{tasksId}(tasksId=${tasks.id})}"></a></td>
+                    <td th:text="${tasks.user.name}"/>
                     <td th:text="${tasks.created}"/>
                     <td th:text="${tasks.done}"/>
-                    <td th:text="${tasks.priorityName}"/>
+                   <td th:text="${tasks.priority.name}"/>
                 </tr>
                 </tbody>
             </table>

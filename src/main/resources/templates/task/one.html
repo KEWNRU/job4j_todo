@@ -18,33 +18,46 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
-        <form class="mt-3" th:action="@{/task/update}" method="post" th:object="${task}" enctype="multipart/form-data">
-            <input type="hidden" name="id" th:field="*{taskId}">
+        <form class="mt-3" method="post" th:object="${task}" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:field="*{id}">
             <div class="mb-3">
-                <label for="title" class="form-label"><b>Название</b></label>
-                <input type="text" class="form-control" id="title" name="title" th:field="*{title}"
-                       placeholder="Предлагая должность, например, Ведущий Java разработчик">
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" th:field="*{description}" rows="15"
-                          placeholder="Опишите требования к кандидату"></textarea>
-            </div>
-            <div class="col-md-auto">
-            
+                <div class="mb-2">
+                    <p><h6>Название:</h6>
+                    <engl th:text="*{title}"></engl>
+                    </p>
+                </div>
+                <div class="mb-2">
+                    <p><h6>Описание:</h6>
+                    <engl th:text="*{description}"></engl>
+                    </p>
+                </div>
+                <div class="mb-2">
+                    <p><h6>Приоритет:</h6>
+                    <engl th:text="*{priority.name}"></engl>
+                    </p>
+                </div>
 
-            <div class="mb-3 row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col-4"><a class="btn btn-light w-100"
-                                              th:href="@{/task/buttonCompleteTask/{id}(id=${task.taskId})}">Выполнть</a>
-                        </div>
-                        <div class="col-4"><a class="btn btn-light w-100" th:href="@{/task/list}">Отмена</a></div>
-                        <div class="col-4"><a class="btn btn-danger w-100"
-                                              th:href="@{/task/delete/{id}(id=${task.taskId})}">Удалить</a></div>
-                        <div class="col-4">
-                            <button class="btn btn-success w-100" type="submit">Обновить</button>
+                <div class="mb-3">
+                    <h6>Категории:</h6>
+                    <ul>
+                        <li th:each="category : ${category}" th:text="${category.name}"></li>
+                    </ul>
+                </div>
+
+                <div class="mb-3 row">
+                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4"><a class="btn btn-light w-100"
+                                                  th:href="@{/task/buttonCompleteTask/{id}(id=${task.id})}">Выполнть</a>
+                            </div>
+                            <div class="col-4"><a class="btn btn-light w-100" th:href="@{/task/list}">Отмена</a></div>
+                            <div class="col-4"><a class="btn btn-danger w-100"
+                                                  th:href="@{/task/delete/{id}(id=${task.id})}">Удалить</a></div>
+                          <!-- <a th:href="@{/task/edit/{id}(id=${task.id})}" class="btn btn-sm btn-primary">Редактировать</a>-->
+                            <div class="col-4">
+                                <button class="btn btn-success w-100" type="submit">Обновить</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -17,15 +17,8 @@ public class TaskStore implements HqlTaskStore {
     private final PriorityStore priorityStore;
 
     @Override
-    public Optional<Task> add(Task task) {
-        try {
-            task.setPriority(priorityStore.findById(task.getPriority().getId()).get());
-            crudRepository.run(session -> session.save(task));
-            return Optional.of(task);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+    public void add(Task task) {
+        crudRepository.run(session -> session.save(task));
     }
 
     @Override
@@ -42,12 +35,12 @@ public class TaskStore implements HqlTaskStore {
 
     @Override
     public List<Task> findAll() {
-        return crudRepository.query("from Task f join fetch f.priority", Task.class);
+        return crudRepository.query("FROM Task f JOIN FETCH f.priority", Task.class);
     }
 
     @Override
     public Optional<Task> findById(Integer id) {
-        return crudRepository.optional("from Task f join fetch f.priority where f.id = :id", Task.class,
+        return crudRepository.optional("from Task f join fetch f.priority join fetch f.categories  where f.id = :id", Task.class,
                 Map.of("id", id));
     }
 

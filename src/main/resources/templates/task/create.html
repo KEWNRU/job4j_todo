@@ -18,7 +18,7 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container">
-        <form class="mt-3" th:action="@{/task/create}" method="post" enctype="multipart/form-data">
+        <form class="mt-3" th:action="@{/task/create}" method="post" th:object="${task}" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label"><b>Название</b></label>
                 <input type="text" class="form-control" id="title" name="title" placeholder="Название задачи">
@@ -35,6 +35,16 @@
                     <option th:each="prioritys : ${priority}" th:value="${prioritys.id}" th:text="${prioritys.name}"></option>
                 </select>
             </div>
+
+            <div class="mb-3">
+                <label for="categories"><b>Категории</b></label>
+                <select class="form-control" id="categories" name="categoryIds" multiple="multiple">
+                    <option th:each="cat : ${category}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"></option>
+                </select>
+            </div>
+
 
             <div class="mb-3 row">
                     <div class="col-6"></div>
